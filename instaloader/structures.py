@@ -405,7 +405,7 @@ class Post:
         .. versionadded:: 4.2.6"""
         def _elliptify(caption):
             pcaption = ' '.join([s.replace('/', '\u2215') for s in caption.splitlines() if s]).strip()
-            return (pcaption[:30] + u"\u2026") if len(pcaption) > 31 else pcaption
+            return (pcaption[:30] + "\u2026") if len(pcaption) > 31 else pcaption
         return _elliptify(self.caption) if self.caption else ''
 
     @property
@@ -558,7 +558,7 @@ class Post:
             return []
 
         comment_edges = self._field('edge_media_to_comment', 'edges')
-        answers_count = sum([edge['node'].get('edge_threaded_comments', {}).get('count', 0) for edge in comment_edges])
+        answers_count = sum(edge['node'].get('edge_threaded_comments', {}).get('count', 0) for edge in comment_edges)
 
         if self.comments == len(comment_edges) + answers_count:
             # If the Post's metadata already contains all parent comments, don't do GraphQL requests to obtain them
@@ -638,7 +638,7 @@ class Post:
         location_id = int(loc['id'])
         if any(k not in loc for k in ('name', 'slug', 'has_public_page', 'lat', 'lng')):
             loc.update(self._context.get_json("explore/locations/{0}/".format(location_id),
-                                              params={'__a': 1})['native_location_data']['location_info'])
+                                              params={'__a': 1, '__d': 'dis'})['native_location_data']['location_info'])
         self._location = PostLocation(location_id, loc['name'], loc['slug'], loc['has_public_page'],
                                       loc.get('lat'), loc.get('lng'))
         return self._location
