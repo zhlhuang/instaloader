@@ -103,7 +103,11 @@ def _main(instaloader: Instaloader, targetlist: List[str],
             if sessionfile is not None:
                 print(err, file=sys.stderr)
             instaloader.context.log("Session file does not exist yet - Logging in.")
-        if not instaloader.context.is_logged_in or username != instaloader.test_login():
+        if not targetlist:
+            instaloader.test_login()
+        if not instaloader.context.is_logged_in :
+            if not targetlist:
+                instaloader.test_login()
             if password is not None:
                 try:
                     instaloader.login(username, password)
